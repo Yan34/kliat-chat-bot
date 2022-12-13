@@ -1,7 +1,11 @@
 import numpy as np
 import nltk
+import re
 from nltk.stem.porter import PorterStemmer
-stemmer = PorterStemmer()
+from snowballstemmer import russian_stemmer
+ru_stemmer = russian_stemmer.RussianStemmer()
+en_stemmer = PorterStemmer()
+
 
 def tokenize(sentence):
     """
@@ -19,7 +23,10 @@ def stem(word):
     words = [stem(w) for w in words]
     -> ["organ", "organ", "organ"]
     """
-    return stemmer.stem(word.lower())
+    if re.match("[а-яА-Я]+", word):
+        return ru_stemmer.stemWord(word.lower())
+    else:
+        return en_stemmer.stem(word.lower())
 
 
 def bag_of_words(tokenized_sentence, words):
